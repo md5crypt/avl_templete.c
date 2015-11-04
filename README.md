@@ -54,9 +54,11 @@ a pure C preprocesor based templete
 * AVL_ALL_STATIC
 
     declare all functions static implies AVL_INCLUDE_BODY. by default not defined
+    
 ###### note that:
 * all options are automatically undefined
 * file can be included multiply times in the same compilation block
+
 ###### example:
 ```c
 //declare <char, int> tree
