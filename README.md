@@ -11,7 +11,7 @@ a pure C preprocesor based templete
 #include "avl_templete.h"
 ```
 
-###### where [option 1..N] can be 
+###### where [option 1..N] can be:
 * AVL_TEMPLATE_PREFIX
     
     prefix added to every function and datatype. no defalut value, has to be defined before include
@@ -82,7 +82,7 @@ int main(){
 	charavl_set(&avl2,"key",1);
 }
 ```
-###### templete declares following datatypes:
+##### templete declares following datatypes:
 
 ```c
 typedef struct {
@@ -97,7 +97,7 @@ typedef struct {
 typedef *prefix_node_t prefix_t; //type returned by api functions
 ```
 
-###### templete declares following function:
+##### templete declares following functions:
 ```c
 //create tree with initial size. can be 0
 void prefix_create(prefix_tree_t* tree, int init_size)
