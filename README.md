@@ -57,7 +57,7 @@ a pure C preprocesor based templete
     
 ###### note that:
 * all options are automatically undefined
-* file can be included multiply times in the same compilation block
+* file can be included multiple times in the same compilation block
 
 ###### example:
 ```c
