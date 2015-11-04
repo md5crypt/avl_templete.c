@@ -24,7 +24,7 @@ a pure C preprocesor based templete
 * AVL_KEY_LE(a,b)
  
     lesser realation macro, defaults to (a<b)
-* AVL_KEY_NEQ
+* AVL_KEY_NEQ(a,b)
 
     inequal relation macro, defaults to (a!=b)
 * AVL_SIZE_TRESHOLD_HIGH
