@@ -90,8 +90,8 @@ typedef struct {
 } prefix_tree_t;
 
 typedef struct { 
-	key_type key;
-	value_type value;
+	key_t key;
+	value_t value;
 } prefix_node_t;
 
 typedef *prefix_node_t prefix_t; //type returned by api functions
