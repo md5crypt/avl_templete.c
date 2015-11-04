@@ -122,7 +122,7 @@ prefix_t prefix_first(prefix_tree_t* tree);
 //return node with key next in order
 prefix_t prefix_next(prefix_t n);
 //bind value with key, insert if not exists, return node
-prefix_t prefix_set(avltree_t* tree, key_t key, value_t value);
+prefix_t prefix_set(prefix_tree_t* tree, key_t key, value_t value);
 //find node with key, if not found insert with value, return node
-prefix_t prefix_addget(avltree_t* tree, key_t key, value_t value);
+prefix_t prefix_addget(prefix_tree_t* tree, key_t key, value_t value);
 ````
