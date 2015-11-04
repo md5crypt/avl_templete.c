@@ -1,6 +1,6 @@
+
 # type generic AVL tree
-### a pure C preprocesor based templete
-***
+a pure C preprocesor based templete
 
 ##### how to use:
 ```c
