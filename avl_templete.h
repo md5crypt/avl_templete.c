@@ -45,19 +45,19 @@ declares following function:
 		copy tree. does NOT preform destenation cleanup before copy
 	void prefix_removenode(prefix_tree_t* tree, prefix_t node)
 		remove node from tree
-	int prefix_remove(prefix_tree_t* tree, key_t key)
+	int prefix_remove(prefix_tree_t* tree, avl_key_t key)
 		remove node from tree by key, return 1 on success
-	prefix_t prefix_insert(prefix_tree_t* tree, key_t key, value_t value)
+	prefix_t prefix_insert(prefix_tree_t* tree, avl_key_t key, avl_value_t value)
 		insert node to tree. undefined behavior if key allready exists
-	prefix_t prefix_get(prefix_tree_t* tree, key_t key)
+	prefix_t prefix_get(prefix_tree_t* tree, avl_key_t key)
 		find node by key, return NULL if node not in tree
 	prefix_t prefix_first(prefix_tree_t* tree)
 		return node with smallest key
 	prefix_t prefix_next(prefix_t n);
 		return node with key next in order
-	prefix_t prefix_set(avltree_t* tree, key_t key, value_t value)
+	prefix_t prefix_set(avltree_t* tree, avl_key_t key, avl_value_t value)
 		bind value with key, insert if not exists, return node
-	prefix_t prefix_addget(avltree_t* tree, key_t key, value_t value)
+	prefix_t prefix_addget(avltree_t* tree, avl_key_t key, avl_value_t value)
 		find node with key, if not found insert with value, return node
 
 usage:
@@ -97,7 +97,7 @@ where [option 1..N] can be
 		defaults to 1.25
 	AVL_COPY_STACK_SIZE
 		internal stack size. Should be not less then
-		log2(2*(n+2)) where n is the maximum tree size
+		log2(2*(n+2)) where n is the AVL_MAXimum tree size
 		defaults to 64
 	AVL_RESIZE_NONE
 		disables tree resizeing
@@ -192,9 +192,9 @@ int main(){
 #define AVL_KEY_NEQ(a,b)		(a!=b)
 #endif
 
-#define PRXN_2(x,suffix) x ## suffix
-#define PRXN_1(x,suffix) PRXN_2(x,suffix)
-#define PRXN(x) PRXN_1(AVL_TEMPLATE_PREFIX,x)
+#define AVL_PRXN_2(x,suffix) x ## suffix
+#define AVL_PRXN_1(x,suffix) AVL_PRXN_2(x,suffix)
+#define AVL_PRXN(x) AVL_PRXN_1(AVL_TEMPLATE_PREFIX,x)
 
 #ifdef AVL_ALL_STATIC
 #define AVL_ATTR static __attribute__((flatten))
@@ -206,11 +206,11 @@ int main(){
 #endif
 
 
-#define avlnode_t PRXN(_node_t)
-#define avl_t PRXN(_t)
-#define avltree_t PRXN(_tree_t)
-#define key_t AVL_KEY_TYPE
-#define value_t AVL_VALUE_TYPE
+#define avlnode_t AVL_PRXN(_node_t)
+#define avl_t AVL_PRXN(_t)
+#define avltree_t AVL_PRXN(_tree_t)
+#define avl_key_t AVL_KEY_TYPE
+#define avl_value_t AVL_VALUE_TYPE
 
 typedef struct avlnode_t avlnode_t;
 typedef avlnode_t* avl_t;
@@ -221,8 +221,8 @@ struct avlnode_t{
 	avl_t l;
 	avl_t r;
 	int height;
-	key_t key;
-	value_t value;
+	avl_key_t key;
+	avl_value_t value;
 };
 
 struct avltree_t{
@@ -233,50 +233,50 @@ struct avltree_t{
 	int init_size;
 };
 
-AVL_ATTR void PRXN(_create)(avltree_t* tree, int init_size);
-AVL_ATTR void PRXN(_clear)(avltree_t* tree);
-AVL_ATTR void PRXN(_destroy)(avltree_t* tree);
-AVL_ATTR void PRXN(_compact)(avltree_t* tree);
-AVL_ATTR void PRXN(_copy)(avltree_t* src, avltree_t* dst);
-AVL_ATTR void PRXN(_removenode)(avltree_t* tree, avl_t node);
-AVL_ATTR avl_t PRXN(_insert)(avltree_t* tree, key_t key, value_t value);
-AVL_ATTR avl_t PRXN(_get)(avltree_t* tree, key_t key);
-AVL_ATTR avl_t PRXN(_next)(avl_t n);
-AVL_ATTR avl_t PRXN(_first)(avltree_t* tree);
+AVL_ATTR void AVL_PRXN(_create)(avltree_t* tree, int init_size);
+AVL_ATTR void AVL_PRXN(_clear)(avltree_t* tree);
+AVL_ATTR void AVL_PRXN(_destroy)(avltree_t* tree);
+AVL_ATTR void AVL_PRXN(_compact)(avltree_t* tree);
+AVL_ATTR void AVL_PRXN(_copy)(avltree_t* src, avltree_t* dst);
+AVL_ATTR void AVL_PRXN(_removenode)(avltree_t* tree, avl_t node);
+AVL_ATTR avl_t AVL_PRXN(_insert)(avltree_t* tree, avl_key_t key, avl_value_t value);
+AVL_ATTR avl_t AVL_PRXN(_get)(avltree_t* tree, avl_key_t key);
+AVL_ATTR avl_t AVL_PRXN(_next)(avl_t n);
+AVL_ATTR avl_t AVL_PRXN(_first)(avltree_t* tree);
 
-static inline int PRXN(_remove)(avltree_t* tree, key_t key){
-	avl_t node = PRXN(_get)(tree,key);
+static inline int AVL_PRXN(_remove)(avltree_t* tree, avl_key_t key){
+	avl_t node = AVL_PRXN(_get)(tree,key);
 	if(node == NULL)
 		return 0;
-	PRXN(_removenode)(tree,node);
+	AVL_PRXN(_removenode)(tree,node);
 	return 1;
 }
 
-static inline avl_t PRXN(_set)(avltree_t* tree, key_t key, value_t value){
-	avl_t node = PRXN(_get)(tree,key);
+static inline avl_t AVL_PRXN(_set)(avltree_t* tree, avl_key_t key, avl_value_t value){
+	avl_t node = AVL_PRXN(_get)(tree,key);
 	if(node == NULL)
-		node = PRXN(_insert)(tree,key,value);
+		node = AVL_PRXN(_insert)(tree,key,value);
 	else
 		node->value = value;
 	return node;
 }
 
-static inline avl_t PRXN(_addget)(avltree_t* tree, key_t key, value_t value){
-	avl_t node = PRXN(_get)(tree,key);
+static inline avl_t AVL_PRXN(_addget)(avltree_t* tree, avl_key_t key, avl_value_t value){
+	avl_t node = AVL_PRXN(_get)(tree,key);
 	if(node == NULL)
-		node = PRXN(_insert)(tree,key,value);
+		node = AVL_PRXN(_insert)(tree,key,value);
 	return node;
 }
 
 #ifdef AVL_INCLUDE_BODY
 
-#define MAX(X,Y) ((X) < (Y) ? (Y) : (X))
-const void* PRXN(__NULLNODE)[4] = {0,0,0,0};
-#define NULLNODE ((avl_t)PRXN(__NULLNODE))
+#define AVL_MAX(X,Y) ((X) < (Y) ? (Y) : (X))
+const void* AVL_PRXN(_nullnode)[4] = {0,0,0,0};
+#define AVL_NULLNODE ((avl_t)AVL_PRXN(_nullnode))
 
-static inline avl_t PRXN(__rot_left)(avl_t n){
+static inline avl_t AVL_PRXN(__rot_left)(avl_t n){
 	avl_t t = n->r;
-	if(n->p != NULLNODE){
+	if(n->p != AVL_NULLNODE){
 		if(n->p->l==n)
 			n->p->l = t;
 		else	
@@ -285,17 +285,17 @@ static inline avl_t PRXN(__rot_left)(avl_t n){
 	t->p = n->p;
 	n->p = t;
 	n->r = t->l;
-	if(n->r != NULLNODE)
+	if(n->r != AVL_NULLNODE)
 		n->r->p = n;
 	t->l = n;
-	n->height = MAX(n->l->height,n->r->height)+1;
-	t->height = MAX(t->l->height,t->r->height)+1;
+	n->height = AVL_MAX(n->l->height,n->r->height)+1;
+	t->height = AVL_MAX(t->l->height,t->r->height)+1;
 	return t;	
 }
 
-static inline avl_t PRXN(__rot_right)(avl_t n){
+static inline avl_t AVL_PRXN(__rot_right)(avl_t n){
 	avl_t t = n->l;
-	if(n->p != NULLNODE){
+	if(n->p != AVL_NULLNODE){
 		if(n->p->l==n)
 			n->p->l = t;
 		else	
@@ -304,44 +304,44 @@ static inline avl_t PRXN(__rot_right)(avl_t n){
 	t->p = n->p;
 	n->p = t;
 	n->l = t->r;
-	if(n->l != NULLNODE)
+	if(n->l != AVL_NULLNODE)
 		n->l->p = n;
 	t->r = n;
-	n->height = MAX(n->l->height,n->r->height)+1;
-	t->height = MAX(t->l->height,t->r->height)+1;
+	n->height = AVL_MAX(n->l->height,n->r->height)+1;
+	t->height = AVL_MAX(t->l->height,t->r->height)+1;
 	return t;	
 }
 
-static inline avl_t PRXN(__balance)(avl_t n){
+static inline avl_t AVL_PRXN(__balance)(avl_t n){
 	while(1){
 		int b = n->l->height - n->r->height;
 		if(b >= 2){
 			avl_t t = n->l;
 			if(t->l->height < t->r->height)
-				PRXN(__rot_left)(t);
-			n = PRXN(__rot_right)(n);
+				AVL_PRXN(__rot_left)(t);
+			n = AVL_PRXN(__rot_right)(n);
 		}
 		else if(b <=- 2){
 			avl_t t = n->r;
 			if(t->r->height < t->l->height)
-				PRXN(__rot_right)(t);
-			n = PRXN(__rot_left)(n);
+				AVL_PRXN(__rot_right)(t);
+			n = AVL_PRXN(__rot_left)(n);
 		}
 		else
-			n->height = MAX(n->l==NULL?0:n->l->height,n->r==NULL?0:n->r->height)+1;
-		if(n->p == NULLNODE)
+			n->height = AVL_MAX(n->l==NULL?0:n->l->height,n->r==NULL?0:n->r->height)+1;
+		if(n->p == AVL_NULLNODE)
 			return n;
 		n = n->p;
 	}
 }
 
-static inline avl_t PRXN(__treecopy)(avl_t root, int new_size){
+static inline avl_t AVL_PRXN(__treecopy)(avl_t root, int new_size){
 	if(new_size == 0)
-		return NULLNODE;
+		return AVL_NULLNODE;
 	avl_t mem = (avl_t)malloc(sizeof(avlnode_t)*new_size);
 	if(mem == NULL)
 		return NULL;
-	if(root == NULLNODE)
+	if(root == AVL_NULLNODE)
 		return mem;
 	avl_t stack[AVL_COPY_STACK_SIZE];
 	int sp = 1;
@@ -350,14 +350,14 @@ static inline avl_t PRXN(__treecopy)(avl_t root, int new_size){
 	stack[0] = mem;
 	while(sp > 0){
 		avl_t node = stack[--sp];
-		if(node->l != NULLNODE){
+		if(node->l != AVL_NULLNODE){
 			mem[mem_p] = node->l[0];
 			mem[mem_p].p = node;
 			node->l = mem+mem_p;
 			stack[sp++] = mem+mem_p;
 			mem_p++;
 		}
-		if(node->r != NULLNODE){
+		if(node->r != AVL_NULLNODE){
 			mem[mem_p] = node->r[0];
 			mem[mem_p].p = node;
 			node->r = mem+mem_p;
@@ -368,7 +368,7 @@ static inline avl_t PRXN(__treecopy)(avl_t root, int new_size){
 	return mem;
 }
 
-static inline void PRXN(__resize)(avltree_t* tree, int new_size){
+static inline void AVL_PRXN(__resize)(avltree_t* tree, int new_size){
 	if(new_size < tree->init_size)
         new_size = tree->init_size;
 	if(new_size < tree->size)
@@ -380,20 +380,20 @@ static inline void PRXN(__resize)(avltree_t* tree, int new_size){
 			free(tree->data);
 			tree->data = NULL;
 		}
-		tree->root = NULLNODE;
+		tree->root = AVL_NULLNODE;
 		tree->allocated_memory = 0;
 		return;
 	}
-	avl_t copy = PRXN(__treecopy)(tree->root,new_size);
+	avl_t copy = AVL_PRXN(__treecopy)(tree->root,new_size);
 	if(tree->data)
 		free(tree->data);
 	tree->data = copy;
-	if(tree->root != NULLNODE)
+	if(tree->root != AVL_NULLNODE)
 		tree->root = copy;
 	tree->allocated_memory = new_size;
 }
 
-static inline void PRXN(__tryresize)(avltree_t* tree){
+static inline void AVL_PRXN(__tryresize)(avltree_t* tree){
 	int new_size = tree->allocated_memory;
 #ifdef AVL_RESIZE_UP
 	if(tree->allocated_memory <= tree->size*AVL_SIZE_TRESHOLD_HIGH){
@@ -405,25 +405,25 @@ static inline void PRXN(__tryresize)(avltree_t* tree){
 	}
 #endif
 #endif
-	PRXN(__resize)(tree,new_size);
+	AVL_PRXN(__resize)(tree,new_size);
 }
 
-static inline avl_t PRXN(__makenode)(avltree_t* tree, key_t key, value_t value, avl_t p){
+static inline avl_t AVL_PRXN(__makenode)(avltree_t* tree, avl_key_t key, avl_value_t value, avl_t p){
 	avl_t node = tree->data + tree->size++;
 	node->key = key;
 	node->value = value;
 	node->height = 1;
-	node->l = NULLNODE;
-	node->r = NULLNODE;
+	node->l = AVL_NULLNODE;
+	node->r = AVL_NULLNODE;
 	node->p = p;
 	return node;
 }
 
-static inline void PRXN(__unconnect)(avltree_t* tree, avl_t node){
+static inline void AVL_PRXN(__unconnect)(avltree_t* tree, avl_t node){
 	avl_t old = tree->data + --tree->size;
 	if(old != node){
 		avl_t p = old->p;
-		if(p == NULLNODE){
+		if(p == AVL_NULLNODE){
 			tree->root = node;
 		}else{
 			if(p->l == old)
@@ -431,148 +431,148 @@ static inline void PRXN(__unconnect)(avltree_t* tree, avl_t node){
 			else
 				p->r = node;
 		}
-		if(old->l != NULLNODE)
+		if(old->l != AVL_NULLNODE)
 			old->l->p = node;
-		if(old->r != NULLNODE)
+		if(old->r != AVL_NULLNODE)
 			old->r->p = node;
 		node[0] = old[0];
 	}
 }
 
-AVL_ATTR avl_t PRXN(_insert)(avltree_t* tree, key_t key, value_t value){
+AVL_ATTR avl_t AVL_PRXN(_insert)(avltree_t* tree, avl_key_t key, avl_value_t value){
 #ifdef AVL_RESIZE_UP
-	PRXN(__tryresize)(tree);
+	AVL_PRXN(__tryresize)(tree);
 #endif
-	if(tree->root == NULLNODE){
-		tree->root = PRXN(__makenode)(tree,key,value,NULLNODE);
+	if(tree->root == AVL_NULLNODE){
+		tree->root = AVL_PRXN(__makenode)(tree,key,value,AVL_NULLNODE);
 		return tree->root;
 	}
 	avl_t n = tree->root;
 	avl_t new_node;
 	while(1){
 		if(AVL_KEY_LE(n->key,key)){
-			if(n->r == NULLNODE){
-				new_node = PRXN(__makenode)(tree,key,value,n);
+			if(n->r == AVL_NULLNODE){
+				new_node = AVL_PRXN(__makenode)(tree,key,value,n);
 				n->r = new_node;
 				break;
 			}
 			n = n->r;
 		}else{
-			if(n->l == NULLNODE){
-				new_node = PRXN(__makenode)(tree,key,value,n);
+			if(n->l == AVL_NULLNODE){
+				new_node = AVL_PRXN(__makenode)(tree,key,value,n);
 				n->l = new_node;
 				break;
 			}
 			n = n->l;
 		}
 	}
-	tree->root = PRXN(__balance)(n);
+	tree->root = AVL_PRXN(__balance)(n);
 	return new_node;
 }
 
-AVL_ATTR avl_t PRXN(_get)(avltree_t* tree, key_t key){
+AVL_ATTR avl_t AVL_PRXN(_get)(avltree_t* tree, avl_key_t key){
 	avl_t n = tree->root;
-	while(n != NULLNODE && AVL_KEY_NEQ(n->key, key))
+	while(n != AVL_NULLNODE && AVL_KEY_NEQ(n->key, key))
 		n = (AVL_KEY_LE(n->key,key)?n->r:n->l);
-	if(n == NULLNODE)
+	if(n == AVL_NULLNODE)
 		return NULL;
 	return n;
 }
 
-AVL_ATTR avl_t PRXN(_first)(avltree_t* tree){
+AVL_ATTR avl_t AVL_PRXN(_first)(avltree_t* tree){
 	avl_t n = tree->root;
-	if(n == NULLNODE)
+	if(n == AVL_NULLNODE)
 		return NULL;
-	while(n->l != NULLNODE)
+	while(n->l != AVL_NULLNODE)
 		n = n->l;
 	return n;
 }
 
-AVL_ATTR avl_t PRXN(_next)(avl_t n){
-	if(n->r != NULLNODE){
+AVL_ATTR avl_t AVL_PRXN(_next)(avl_t n){
+	if(n->r != AVL_NULLNODE){
 		n = n->r;
-		while(n->l != NULLNODE)
+		while(n->l != AVL_NULLNODE)
 			n = n->l;
 		return n;
 	}
-	key_t key = n->key;
+	avl_key_t key = n->key;
 	while(!AVL_KEY_LE(key,n->key)){
 		n = n->p;
-		if(n==NULLNODE)
+		if(n==AVL_NULLNODE)
 			return NULL;
 	}
 	return n;		
 }
 
-AVL_ATTR void PRXN(_removenode)(avltree_t* tree, avl_t n){
-	if(n->l!=NULLNODE && n->r!=NULLNODE){
+AVL_ATTR void AVL_PRXN(_removenode)(avltree_t* tree, avl_t n){
+	if(n->l!=AVL_NULLNODE && n->r!=AVL_NULLNODE){
 		avl_t t = n->r;
-		while(t->l != NULLNODE)
+		while(t->l != AVL_NULLNODE)
 			t = t->l;
 		n->key = t->key;
 		n = t;
 	}
 	avl_t p = n->p;
-	avl_t c = n->r==NULLNODE?n->l:n->r;
-	if(c != NULLNODE)
+	avl_t c = n->r==AVL_NULLNODE?n->l:n->r;
+	if(c != AVL_NULLNODE)
 		c->p = p;
-	if(p == NULLNODE){
+	if(p == AVL_NULLNODE){
 		tree->root = c;
 	}else{
 		if(p->l==n)
 			p->l = c;
 		else
 			p->r = c;
-		tree->root = PRXN(__balance)(p);
+		tree->root = AVL_PRXN(__balance)(p);
 	}
-	PRXN(__unconnect)(tree,n);
+	AVL_PRXN(__unconnect)(tree,n);
 #ifdef AVL_RESIZE
-	PRXN(__tryresize)(tree);
+	AVL_PRXN(__tryresize)(tree);
 #endif
 	return;
 }
 
-AVL_ATTR void PRXN(_create)(avltree_t* tree, int init_size){
+AVL_ATTR void AVL_PRXN(_create)(avltree_t* tree, int init_size){
 	tree->size = 0;
 	tree->init_size = init_size;
 	tree->allocated_memory = init_size;
 	tree->data = (avl_t)malloc(init_size*sizeof(avlnode_t));
-	tree->root = NULLNODE;
+	tree->root = AVL_NULLNODE;
 }
 
-AVL_ATTR void PRXN(_destroy)(avltree_t* tree){
+AVL_ATTR void AVL_PRXN(_destroy)(avltree_t* tree){
 	free(tree->data);
 	tree->data = NULL;
 	tree->size = 0;
 	tree->allocated_memory = 0;
-	tree->root = NULLNODE;
+	tree->root = AVL_NULLNODE;
 }
 
-AVL_ATTR void PRXN(_clear)(avltree_t* tree){
+AVL_ATTR void AVL_PRXN(_clear)(avltree_t* tree){
 	tree->size = 0;
-	tree->root = NULLNODE;
-	PRXN(__resize)(tree,0);
+	tree->root = AVL_NULLNODE;
+	AVL_PRXN(__resize)(tree,0);
 }
 
-AVL_ATTR void PRXN(_compact)(avltree_t* tree){
-	PRXN(__resize)(tree,0);
+AVL_ATTR void AVL_PRXN(_compact)(avltree_t* tree){
+	AVL_PRXN(__resize)(tree,0);
 }
 
-AVL_ATTR void PRXN(_copy)(avltree_t* src, avltree_t* dst){
+AVL_ATTR void AVL_PRXN(_copy)(avltree_t* src, avltree_t* dst){
 	dst[0] = src[0];
-	dst->data = PRXN(__treecopy)(src->root,src->size*AVL_RESIZE_LOW);
+	dst->data = AVL_PRXN(__treecopy)(src->root,src->size*AVL_RESIZE_LOW);
 	dst->root = dst->data;
 }
 #endif
 
-#undef PRXN_2
-#undef PRXN_1
-#undef PRXN
+#undef AVL_PRXN_2
+#undef AVL_PRXN_1
+#undef AVL_PRXN
 #undef avlnode_t
 #undef avltree_t
 #undef avl_t
-#undef key_t
-#undef value_t
+#undef avl_key_t
+#undef avl_value_t
 #undef AVL_KEY_NEQ
 #undef AVL_KEY_LE
 #undef AVL_VALUE_TYPE
@@ -588,8 +588,8 @@ AVL_ATTR void PRXN(_copy)(avltree_t* src, avltree_t* dst){
 #undef AVL_ALL_STATIC
 #undef AVL_ATTR
 #undef AVL_INCLUDE_BODY
-#undef MAX
-#undef NULLNODE
+#undef AVL_MAX
+#undef AVL_NULLNODE
 #endif
 
 #ifdef AVL_RESIZE
